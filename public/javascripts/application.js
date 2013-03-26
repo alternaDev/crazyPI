@@ -57,13 +57,15 @@ function calculateDigit(index) {
 }
 
 function submitDigit(index, digit) {
-  $.post("/submit-new-digit", {index: index, value: digit}, function(data) {
+  $.post("/submit-new-digit", {index: index, value: digit}).success( function(data) {
     console.log(data);
     
     if(data == "okay") {
       doneDigits++;
       updateStuff();
     }
+    doDigit();
+  }).fail(function(){
     doDigit();
   });
 }
