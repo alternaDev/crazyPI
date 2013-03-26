@@ -6,6 +6,7 @@ $("input[name=toggleOptions]").click(function() {
 
 var doneDigits = 0;
 var doing = 0;
+var CHUNK_SIZE = 10;
 
 $("#calc5").click(function() {
   if($("#calc5").attr("disabled")!="disabled")
@@ -35,14 +36,20 @@ function doDigits(amount) {
   $(".btn").attr("disabled", "disabled");
   $(".btn").addClass("disabled");
   
-  doDigit();
+  doStuff();
 }
 
+function doStuff(){
+  var max = CHUNK_SIZE;
+  if(max > doing - doneDigits) max = doing - doneDigits;
+  console.log(max);
+  for(var i = 0; i < max; i++)
+    doDigit();
+} 
+
 function doDigit() {
-  if(doneDigits >= doing) return;
   getDigitIndex(function(index) {
-    var digit = calculateDigit(index-1);
-    submitDigit(index, digit);
+    calculateDigit(index-1, submitDigit);
   });
 }
 
@@ -52,8 +59,10 @@ function getDigitIndex(callback) {
   });
 }
 
-function calculateDigit(index) {
-  return generateDigit(index);
+function calculateDigit(index, callback) {
+  var d = generateDigit(index);
+  d = d.replace(".", "");
+  callback(index + 1, d);
 }
 
 function submitDigit(index, digit) {
@@ -63,8 +72,7 @@ function submitDigit(index, digit) {
     if(data == "okay") {
       doneDigits++;
       updateStuff();
-    }
-    doDigit();
+    } else if(data != "hamWaSchon") doDigit();
   }).fail(function(){
     doDigit();
   });
@@ -74,10 +82,12 @@ function updateStuff() {
   if(doneDigits >= doing) {
     $(".btn").removeAttr("disabled");
     $(".btn").removeClass("disabled");
-  }
+  } else if(doneDigits % CHUNK_SIZE == 0 && doneDigits > 0) doStuff();
+  
   $("#bar").css("width", ((doneDigits/doing)*100)+"%");
+  
 }
 
 $(function(){
-  doDigit();
+  doDigits(1);
 });
