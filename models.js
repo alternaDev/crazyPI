@@ -10,6 +10,7 @@ dbOptions.host     = config.db.host;
 dbOptions.port     = config.db.port;
 dbOptions.dialect  = config.db.dialect;
 dbOptions.protocol = config.db.protocol;
+dbOptions.storage  = config.db.storage;
 
 var sequelize = new Sequelize(dbOptions.name, dbOptions.user, dbOptions.pass, {
   host: dbOptions.host,

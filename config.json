@@ -6,6 +6,7 @@
     "host": "localhost",
     "port": null,
     "dialect": "sqlite",
-    "protocol": "sqlite"
+    "protocol": "sqlite",
+    "storage": "sqlite.db"
   }
 }
