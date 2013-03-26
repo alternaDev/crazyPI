@@ -71,7 +71,6 @@ function updateUI() {
 function doDigitBatch(amount, callback) {
   if(amount <= 0) return;
   
-  console.log(amount);
   getDigitIndexes(amount, function(indexes) {
     var values = [];
 
@@ -103,6 +102,8 @@ function submitDigits(digits, callback) {
 function getDigitIndexes(amount, callback) {
   $.getJSON("/get-new-index?amount="+amount, function(data) {
     callback((data));
+  }).fail(function() {
+    getDigitIndexes(amount, callback);
   });
 }
 
