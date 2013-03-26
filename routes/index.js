@@ -17,7 +17,7 @@ exports.index = function(req, res) {
 exports.submitDigit = function(req, res) {
   var digit = req.body.index,
       value = req.body.value,
-      ip    = req.connection.remoteAddress;
+      ip    = req.ip;
   if(!(/^[0-9]+$/.test(digit))) {
     res.send(400, "invalid digit-id");
     return;
