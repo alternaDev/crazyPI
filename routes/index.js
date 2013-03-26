@@ -77,7 +77,9 @@ exports.submitDigits = function(req, res) {
       .success(function(digit) {
         var hamWaSchon = digit.digitValue != null;
         if(hamWaSchon) {
-          res.send("hamWaSchon");
+          count++;
+          if(count >= values.length)
+            res.send("okay, aber wir hatten schon was....");
           return;
         }
         digit.digitValue = piVal;
