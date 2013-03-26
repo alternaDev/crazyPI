@@ -74,15 +74,29 @@ function doDigitBatch(amount, callback) {
   getDigitIndexes(amount, function(indexes) {
     var values = [];
 
-    $.each(indexes, function(index, value) {
-      var digit = generateDigit(value-1);
-      values.push({index: value, value: digit});
+    doGenerateDigits(indexes, values, function(values){
+      submitDigits(values, function() {
+        callback();
+      }); 
     });
-    
-    submitDigits(values, function() {
-      callback();
-      
-    }); 
+  });
+}
+
+function doGenerateDigits(indices, values, callback) {
+  if(indices.length <= 0) {
+    callback(values);
+    return;
+  }
+  
+  var index = indices[0];
+  indices = indices.slice(1);
+  
+  var r = Parallel.spawn(generateDigit, index);
+  
+  r.fetch(function(digit) {
+    values.push({index: index, value: digit});
+    r.terminate();
+    doGenerateDigits(indices, values, callback);
   });
 }
 
@@ -108,5 +122,7 @@ function getDigitIndexes(amount, callback) {
 }
 
 $(document).ready(function(){
+  Parallel.require("javascripts/pi.js");
+  
   doDaStuff(1);
 });
