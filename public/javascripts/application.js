@@ -35,12 +35,15 @@ function doDigits(amount) {
   $(".btn").attr("disabled", "disabled");
   $(".btn").addClass("disabled");
   
-  for(var i = 0; i < amount; i++) {
-    getDigitIndex(function(index) {
-      var digit = calculateDigit(index-1);
-      submitDigit(index, digit);
-    });
-  }
+  doDigit();
+}
+
+function doDigit() {
+  if(doneDigits >= doing) return;
+  getDigitIndex(function(index) {
+    var digit = calculateDigit(index-1);
+    submitDigit(index, digit);
+  });
 }
 
 function getDigitIndex(callback) {
@@ -57,12 +60,11 @@ function submitDigit(index, digit) {
   $.post("/submit-new-digit", {index: index, value: digit}, function(data) {
     console.log(data);
     
-    if(data != "okay") {
-      doDigits(1);
-    } else {
+    if(data == "okay") {
       doneDigits++;
       updateStuff();
     }
+    doDigit();
   });
 }
 
@@ -75,5 +77,5 @@ function updateStuff() {
 }
 
 $(function(){
-  doDigits(1);
+  doDigit();
 });
