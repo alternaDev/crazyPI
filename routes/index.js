@@ -114,7 +114,7 @@ function getNextDigitIndexes(amount, callback) {
   models.Digit.findAll({where: {digitValue: null}, limit: amount}).success(function(digits) {
     if(digits.length < amount) {
       generateMoreDigits();
-      getNextDigitIndex(amount, callback);
+      getNextDigitIndexes(amount, callback);
     } else {
       var resp = [];
       for(var i = 0; i < amount; i++) resp.push(digits[i].digitIndex);
