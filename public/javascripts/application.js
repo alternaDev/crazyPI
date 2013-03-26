@@ -31,8 +31,6 @@ $("#calc5000").click(function() {
 function doDaStuff(digitAmount){
   var rest = digitAmount % BATCH_SIZE;
   digitAmount -= rest;
-  console.log("DigitAmount:" + digitAmount);
-  console.log("Rest:"+rest);
 
   doneDigitBatches = 0; 
   
@@ -52,16 +50,13 @@ function doDigitBatches(batchSize) {
     setTimeout(function() {
       doDigitBatch(batchSize, function() {
         doneDigitBatches++;
-        doDigitBatches();
+        doDigitBatches(batchSize);
       });
     }, 0);
   }
 }
 
 function updateUI() {
-  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
-  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
-  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
   $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
 
   if(doneDigitBatches >= doing) {
@@ -75,6 +70,7 @@ function updateUI() {
 
 function doDigitBatch(amount, callback) {
   if(amount <= 0) return;
+  
   console.log(amount);
   getDigitIndexes(amount, function(indexes) {
     var values = [];

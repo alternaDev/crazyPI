@@ -34,7 +34,8 @@ exports.submitDigit = function(req, res) {
   .success(function(digit) {
     var hamWaSchon = digit.digitValue != null;
     if(hamWaSchon) {
-      res.send("hamWaSchon"); return;
+      res.send("hamWaSchon");
+      return;
     }
     digit.digitValue = value;
     digit.userIP = ip;
@@ -67,7 +68,9 @@ exports.submitDigits = function(req, res) {
   var values = req.body.values;
   var ip = req.ip;
   if(typeof values != 'undefined') {
+    var count = 0;
     values.forEach(function(val) {
+      
       var index = val.index,
       piVal = val.value;
     
@@ -77,12 +80,15 @@ exports.submitDigits = function(req, res) {
       .success(function(digit) {
         var hamWaSchon = digit.digitValue != null;
         if(hamWaSchon) {
+          res.send("hamWaSchon");
           return;
         }
         digit.digitValue = piVal;
         digit.userIP = ip;
         digit.save().success(function() {
-        
+          count++;
+          if(count >= values.length)
+            res.send("okay");
         }).error(function(error) {
           res.send("fail: "+error);
         });
@@ -92,7 +98,6 @@ exports.submitDigits = function(req, res) {
       });
     });
   }
-  res.send("okay");
 }
 
 exports.getPi = function(req, res) {
