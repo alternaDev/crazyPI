@@ -1,6 +1,7 @@
-var models = require("../models.js");
+var models = require("../models.js"),
+    random = require("mersenne");
 
-var BATCH_SIZE = 100;
+var BATCH_SIZE = 5000;
 
 /*
  * GET home page.
@@ -19,11 +20,11 @@ exports.submitDigit = function(req, res) {
       value = req.body.value,
       ip    = req.ip;
   if(!(/^[0-9]+$/.test(digit))) {
-    res.send(400, "invalid digit-id");
+    res.send("invalid digit-id");
     return;
   }
   if(!(/^[0-9a-fA-F]+$/.test(value))) {
-    res.send(400, "invalid digit-value");
+    res.send("invalid digit-value");
     return;
   }
   
@@ -31,6 +32,10 @@ exports.submitDigit = function(req, res) {
     digitIndex: digit
   }})
   .success(function(digit) {
+    var hamWaSchon = digit.digitValue != null;
+    if(hamWaSchon) {
+      res.send("hamWaSchon"); return;
+    }
     digit.digitValue = value;
     digit.userIP = ip;
     digit.save().success(function() {
@@ -70,7 +75,10 @@ function getNextDigitIndex(callback) {
       generateMoreDigits();
       getNextDigitIndex(callback);
     } else {
-      callback(digits[Math.floor(Math.random()*digits.length)].digitIndex);
+      var digit;
+      var randomNumber = random.rand(digits.length);
+      digit = digits[randomNumber];
+      callback(digit.digitIndex);
     }
     
   });

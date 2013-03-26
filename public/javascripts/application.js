@@ -34,17 +34,17 @@ function doDigits(amount) {
   doing = amount;
   $(".btn").attr("disabled", "disabled");
   $(".btn").addClass("disabled");
+  
   for(var i = 0; i < amount; i++) {
-    setTimeout(
-      "getDigitIndex(function(index) {"+
-      "var digit = calculateDigit(index-1);"+
-      "submitDigit(index, digit);"+
-      "})", 50*i);
+    getDigitIndex(function(index) {
+      var digit = calculateDigit(index-1);
+      submitDigit(index, digit);
+    });
   }
 }
 
 function getDigitIndex(callback) {
-  $.get("/get-new-index", function(data) {
+  $.get("/get-new-index/"+Math.random(), function(data) {
     callback(parseInt(data));
   });
 }
@@ -55,8 +55,14 @@ function calculateDigit(index) {
 
 function submitDigit(index, digit) {
   $.post("/submit-new-digit", {index: index, value: digit}, function(data) {
-    doneDigits++;
-    updateStuff();
+    console.log(data);
+    
+    if(data != "okay") {
+      doDigits(1);
+    } else {
+      doneDigits++;
+      updateStuff();
+    }
   });
 }
 

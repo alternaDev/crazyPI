@@ -29,6 +29,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/get-new-index', routes.getDigitIndex);
+app.get('/get-new-index/:randomshit', routes.getDigitIndex);
 app.get('/pi', routes.getPi);
 app.post('/submit-new-digit', routes.submitDigit);
 
