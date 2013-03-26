@@ -92,11 +92,15 @@ function doDigitBatch(amount, callback) {
 }
 
 function submitDigits(digits, callback) {
-  $.post("/submit-new-digits", {values: digits}).success( function(data) {
+  $.post("/submit-new-digits", {values: digits})
+  .success(function(data) {
     console.log(data);
+    if(data != "okay") doing++;
     callback();
   }).fail(function(){
     console.log("fail");
+    doing++;
+    callback();
   });
 }
 
