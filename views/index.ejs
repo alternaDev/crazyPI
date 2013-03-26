@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/flat-ui.css' />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="span12">
+          <h1>Welcome to <%= title %>!</h1>
+        </div>
+        <div class="span12">
+          <p class="lead">Calculating π with YOUR help</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <p>
+            With your help, we will be able to calculate (theoretically) all the digits of π! All you have to do is to press one of these buttons:
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <a href="#" class="btn btn-large btn-block btn-primary" id="calc5">Calculate 5 digits!</a>
+        </div>
+        <div class="span4">
+          <a href="#" class="btn btn-large btn-block btn-warning" id="calc25">Calculate 25 digits!</a>
+        </div>
+        <div class="span4">
+          <a href="#" class="btn btn-large btn-block btn-danger" id="calc100">Calculate 100 digits!</a>
+        </div>
+      </div>
+      <div class="row">
+        <br />
+        <div class="span12">
+          <div class="progress">
+            <div class="bar" id="bar" style="width: 0px;"></div>
+          </div>
+          <hr />
+        </div>
+        
+      </div>
+      <div class="row">
+        <div class="span8">
+          <p>
+            We already collected <%= digitAmount %> digits by <%= peopleAmount %> different contributors!
+          </p>
+        </div>
+        <div class="span4">
+          <h4>
+            #YOLO-Mode: &nbsp;
+            <div class="toggle">
+              <label class="toggle-radio" for="toggleOption2">ON</label>
+              <input type="radio" name="toggleOptions" id="toggleOption1" value="on">
+              <label class="toggle-radio" for="toggleOption1">OFF</label>
+              <input type="radio" name="toggleOptions" id="toggleOption2" value="off" checked="checked">
+            </div>
+          </h4>
+          <div id="yolo-button" style="display: none;">
+            <a href="#" class="btn btn-large btn-block btn-danger" id="calc5000">Calculate five-fucking-thousand digits!</a>
+            <br />
+            <p>This is not guaranteed to work...might crash your browser, might kill our DB...who knows?</p>
+            <img src="images/yolo-mode.jpg" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="javascripts/jquery-1.8.2.min.js"></script>
+    <script src="javascripts/jquery-ui-1.10.0.custom.min.js"></script>
+    <script src="javascripts/jquery.dropkick-1.0.0.js"></script>
+    <script src="javascripts/custom_checkbox_and_radio.js"></script>
+    <script src="javascripts/custom_radio.js"></script>
+    <script src="javascripts/jquery.tagsinput.js"></script>
+    <script src="javascripts/bootstrap-tooltip.js"></script>
+    <script src="javascripts/jquery.placeholder.js"></script>
+    <script src="http://vjs.zencdn.net/c/video.js"></script>
+    <script src="javascripts/application.js"></script>
+    <script src="javascripts/pi.js"></script>
+  </body>
+</html>
