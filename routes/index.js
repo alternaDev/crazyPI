@@ -56,11 +56,8 @@ exports.getDigitIndex = function(req, res) {
     getNextDigitIndexes(parseInt(amount), function(indexes) {
       res.send(JSON.stringify(indexes));
     })
-  } else {
-    getNextDigitIndex(function(index) {
-      res.send(index.toString());
-    });
-  }
+  } else
+    res.send([-1]);
   
 };
 
@@ -112,21 +109,6 @@ exports.getPi = function(req, res) {
     res.send(pi);
   });
 };
-
-function getNextDigitIndex(callback) {
-  models.Digit.findAll({where: {digitValue: null}}).success(function(digits) {
-    if(digits.length <= 0) {
-      generateMoreDigits();
-      getNextDigitIndex(callback);
-    } else {
-      var digit;
-      var randomNumber = random.rand(digits.length);
-      digit = digits[randomNumber];
-      callback(digit.digitIndex);
-    }
-    
-  });
-}
 
 function getNextDigitIndexes(amount, callback) {
   models.Digit.findAll({where: {digitValue: null}, limit: amount}).success(function(digits) {
