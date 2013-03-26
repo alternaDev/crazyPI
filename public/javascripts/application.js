@@ -91,6 +91,8 @@ function doGenerateDigits(indices, values, callback) {
   var index = indices[0];
   indices = indices.slice(1);
   
+  Parallel.require(modPow, S);
+  
   var r = Parallel.spawn(generateDigit, index);
   
   r.fetch(function(digit) {
@@ -122,7 +124,7 @@ function getDigitIndexes(amount, callback) {
 }
 
 $(document).ready(function(){
-  Parallel.require("javascripts/pi.js");
+  
   
   doDaStuff(1);
 });

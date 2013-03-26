@@ -75,6 +75,7 @@ exports.submitDigits = function(req, res) {
         digitIndex: index
       }})
       .success(function(digit) {
+        if(digit == null) return;
         var hamWaSchon = digit.digitValue != null;
         if(hamWaSchon) {
           count++;
