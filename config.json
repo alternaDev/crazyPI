@@ -1,0 +1,11 @@
+{
+  "db": {
+    "name": "crazy_pi",
+    "user": "alternaDev",
+    "password": "...",
+    "host": "localhost",
+    "port": null,
+    "dialect": "sqlite",
+    "protocol": "sqlite"
+  }
+}

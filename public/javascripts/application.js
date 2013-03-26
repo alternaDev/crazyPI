@@ -67,3 +67,7 @@ function updateStuff() {
   }
   $("#bar").css("width", ((doneDigits/doing)*100)+"%");
 }
+
+$(function(){
+  doDigits(1);
+});

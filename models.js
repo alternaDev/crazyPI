@@ -1,28 +1,15 @@
-var Sequelize = require("sequelize");
+var Sequelize = require("sequelize"),
+    config    = require("./config.json");
 
 var dbOptions = {};
 
-switch(process.env.NODE_ENV) {
-  case 'production':
-  var url	= require('url'),
-  dbUrl   = url.parse(process.env.DATABASE_URL),
-  authArr = dbUrl.auth.split(':');
-
-  dbOptions.name     = dbUrl.path.substring(1);
-  dbOptions.user     = authArr[0];
-  dbOptions.pass     = authArr[1];
-  dbOptions.host     = dbUrl.host;
-  dbOptions.port     = null;
-  dbOptions.dialect  = 'postgres';
-  dbOptions.protocol = 'postgres';
-  break;
-  default:
-  dbOptions.name = "pi";
-  dbOptions.user = "user";
-  dbOptions.dialect = "sqlite";
-  dbOptions.storage = "sqlite.db";
-  break;
-}
+dbOptions.name     = config.db.name;
+dbOptions.user     = config.db.user;
+dbOptions.pass     = config.db.password;
+dbOptions.host     = config.db.host;
+dbOptions.port     = config.db.port;
+dbOptions.dialect  = config.db.dialect;
+dbOptions.protocol = config.db.protocol;
 
 var sequelize = new Sequelize(dbOptions.name, dbOptions.user, dbOptions.pass, {
   host: dbOptions.host,
@@ -50,7 +37,7 @@ exports.getUserAmount = function(callback) {
         if(digit.userIP != "")
           ips.push(digit.userIP);
     });
-    callback(ips.length-1);
+    callback(ips.length - 1);
   });
 }
 
