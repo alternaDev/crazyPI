@@ -4,90 +4,108 @@ $("input[name=toggleOptions]").click(function() {
   return true;
 });
 
-var doneDigits = 0;
+var doneDigitBatches = 0;
 var doing = 0;
-var CHUNK_SIZE = 10;
+var BATCH_SIZE = 25;
 
-$("#calc5").click(function() {
-  if($("#calc5").attr("disabled")!="disabled")
-    doDigits(5);
-});
-
-$("#calc25").click(function() {
-  if($("#calc25").attr("disabled")!="disabled")
-    doDigits(25);
+$("#calc50").click(function() {
+  if($("#calc50").attr("disabled")!="disabled")
+    doDaStuff(50);
 });
 
 $("#calc100").click(function() {
-  if($("#calc100").attr("disabled")!="disabled")  
-    doDigits(100);
+  if($("#calc100").attr("disabled")!="disabled")
+    doDaStuff(100);
+});
+
+$("#calc500").click(function() {
+  if($("#calc500").attr("disabled")!="disabled")  
+    doDaStuff(500);
 });
 
 $("#calc5000").click(function() {
   if($("#calc5000").attr("disabled")!="disabled")
-    doDigits(5000);
+    doDaStuff(5000);
 });
 
-function doDigits(amount) {
-  doneDigits = 0;
-  $("#bar").css("width", ((doneDigits/doing)*100)+"%");
+function doDaStuff(digitAmount){
+  var rest = digitAmount % BATCH_SIZE;
+  digitAmount -= rest;
+  console.log("DigitAmount:" + digitAmount);
+  console.log("Rest:"+rest);
+
+  doneDigitBatches = 0; 
   
-  doing = amount;
-  $(".btn").attr("disabled", "disabled");
-  $(".btn").addClass("disabled");
+  if(digitAmount > 0) {
+    doing = digitAmount / BATCH_SIZE;
+    doing += rest > 0 ? 1 : 0;
+    doDigitBatches(BATCH_SIZE);
+  } else {
+    doing = 1;
+    doDigitBatches(rest);
+  }  
   
-  doStuff();
+}
+function doDigitBatches(batchSize) {
+  updateUI();
+  if(doneDigitBatches < doing) {
+    setTimeout(function() {
+      doDigitBatch(batchSize, function() {
+        doneDigitBatches++;
+        doDigitBatches();
+      });
+    }, 0);
+  }
 }
 
-function doStuff(){
-  var max = CHUNK_SIZE;
-  if(max > doing - doneDigits) max = doing - doneDigits;
-  console.log(max);
-  for(var i = 0; i < max; i++)
-    doDigit();
-} 
+function updateUI() {
+  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
+  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
+  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
+  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
 
-function doDigit() {
-  getDigitIndex(function(index) {
-    calculateDigit(index-1, submitDigit);
-  });
-}
-
-function getDigitIndex(callback) {
-  $.get("/get-new-index/"+Math.random(), function(data) {
-    callback(parseInt(data));
-  });
-}
-
-function calculateDigit(index, callback) {
-  var d = generateDigit(index);
-  d = d.replace(".", "");
-  callback(index + 1, d);
-}
-
-function submitDigit(index, digit) {
-  $.post("/submit-new-digit", {index: index, value: digit}).success( function(data) {
-    console.log(data);
-    
-    if(data == "okay") {
-      doneDigits++;
-      updateStuff();
-    } else if(data != "hamWaSchon") doDigit();
-  }).fail(function(){
-    doDigit();
-  });
-}
-
-function updateStuff() {
-  if(doneDigits >= doing) {
+  if(doneDigitBatches >= doing) {
     $(".btn").removeAttr("disabled");
     $(".btn").removeClass("disabled");
-  } else if(doneDigits % CHUNK_SIZE == 0 && doneDigits > 0) doStuff();
-  
-  $("#bar").css("width", ((doneDigits/doing)*100)+"%");
-  
+  } else {
+    $(".btn").attr("disabled", "disabled");
+    $(".btn").addClass("disabled");
+  }
 }
 
-$(function(){
-  doDigits(1);
+function doDigitBatch(amount, callback) {
+  if(amount <= 0) return;
+  console.log(amount);
+  getDigitIndexes(amount, function(indexes) {
+    var values = [];
+
+    $.each(indexes, function(index, value) {
+      var digit = generateDigit(value-1);
+      values.push({index: value, value: digit});
+    });
+    
+    submitDigits(values, function() {
+      callback();
+      
+    }); 
+  });
+}
+
+function submitDigits(digits, callback) {
+  $.post("/submit-new-digits", {values: digits}).success( function(data) {
+    console.log(data);
+    callback();
+  }).fail(function(){
+    console.log("fail");
+  });
+}
+
+function getDigitIndexes(amount, callback) {
+  $.getJSON("/get-new-index?amount="+amount, function(data) {
+    callback((data));
+  });
+}
+
+$(document).ready(function(){
+  doDaStuff(1);
 });

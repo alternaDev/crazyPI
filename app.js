@@ -14,6 +14,7 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
+  app.enable('trust proxy');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -32,6 +33,7 @@ app.get('/get-new-index', routes.getDigitIndex);
 app.get('/get-new-index/:randomshit', routes.getDigitIndex);
 app.get('/pi', routes.getPi);
 app.post('/submit-new-digit', routes.submitDigit);
+app.post('/submit-new-digits', routes.submitDigits);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

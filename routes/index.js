@@ -47,13 +47,52 @@ exports.submitDigit = function(req, res) {
   .error(function(error) {
     res.send("fail: " + error);
   });
-}
+};
 
 exports.getDigitIndex = function(req, res) {
-  getNextDigitIndex(function(index) {
-    res.send(index.toString());
-  });
+  var amount = req.query["amount"];
+  if(typeof amount != 'undefined') {
+    getNextDigitIndexes(parseInt(amount), function(indexes) {
+      res.send(JSON.stringify(indexes));
+    })
+  } else {
+    getNextDigitIndex(function(index) {
+      res.send(index.toString());
+    });
+  }
   
+};
+
+exports.submitDigits = function(req, res) {
+  var values = req.body.values;
+  var ip = req.ip;
+  if(typeof values != 'undefined') {
+    values.forEach(function(val) {
+      var index = val.index,
+      piVal = val.value;
+    
+      models.Digit.find({where: {
+        digitIndex: index
+      }})
+      .success(function(digit) {
+        var hamWaSchon = digit.digitValue != null;
+        if(hamWaSchon) {
+          return;
+        }
+        digit.digitValue = piVal;
+        digit.userIP = ip;
+        digit.save().success(function() {
+        
+        }).error(function(error) {
+          res.send("fail: "+error);
+        });
+      })
+      .error(function(error) {
+        res.send("fail: " + error);
+      });
+    });
+  }
+  res.send("okay");
 }
 
 exports.getPi = function(req, res) {
@@ -67,7 +106,7 @@ exports.getPi = function(req, res) {
     });
     res.send(pi);
   });
-}
+};
 
 function getNextDigitIndex(callback) {
   models.Digit.findAll({where: {digitValue: null}}).success(function(digits) {
@@ -79,6 +118,20 @@ function getNextDigitIndex(callback) {
       var randomNumber = random.rand(digits.length);
       digit = digits[randomNumber];
       callback(digit.digitIndex);
+    }
+    
+  });
+}
+
+function getNextDigitIndexes(amount, callback) {
+  models.Digit.findAll({where: {digitValue: null}, limit: amount}).success(function(digits) {
+    if(digits.length < amount) {
+      generateMoreDigits();
+      getNextDigitIndex(amount, callback);
+    } else {
+      var resp = [];
+      for(var i = 0; i < amount; i++) resp.push(digits[i].digitIndex);
+      callback(resp);
     }
     
   });
