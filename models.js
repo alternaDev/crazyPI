@@ -51,3 +51,20 @@ exports.getDigitAmount = function(callback) {
     callback(count);
   });
 }
+
+exports.getDayGraphData = function(callback) {
+  var date = new Date(new Date().getTime() - 604800000);
+  exports.Digit.findAll({where: ["updatedAt >= ?", date]}).success(function(digits) {
+    var data = {};
+    digits.forEach(function(digit) {
+      var digitDate = digit.updatedAt;
+      digitDate.setHours(0);
+      digitDate.setMinutes(0);
+      digitDate.setSeconds(0);
+      digitDate.setMilliseconds(0);
+      if(typeof data[digitDate] == 'undefined') data[digitDate] = 0;
+      data[digitDate] = data[digitDate] + 1;
+    });
+    callback(data);
+  });
+}

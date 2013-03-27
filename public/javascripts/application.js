@@ -132,8 +132,41 @@ function getDigitIndexes(amount, callback) {
   });
 }
 
+function showChart() {
+  $.get("/get-day-graph-data", {}, function(reponseData) {
+    var labels = [];
+    var graphData = [];
+    $.each(reponseData, function(index, value) {
+      index = new Date(index);
+      var dayName = index.getDay()+'. '+index.getMonth()+'.';
+      labels.push(dayName);
+      graphData.push(value);
+    });
+    
+    var data = {
+    	labels : labels,
+    	datasets : [
+    		{
+    			fillColor : "rgba(26, 188, 156, 0.3)",
+    			strokeColor : "rgba(22, 160, 133, 1)",
+    			pointColor : "rgba(39, 174, 96, 1)",
+    			pointStrokeColor : "rgba(46, 204, 113, 0.2)",
+    			data : graphData
+    		}
+    	]
+    }
+    var ctx = document.getElementById("dayChart").getContext("2d");
+    var dayChart = new Chart(ctx).Line(data);
+  
+    $("#dayChart").css("width", "100%");
+  });
+  
+  
+  
+  
+}
+
 $(document).ready(function(){
-  
-  
   doDaStuff(1);
+  showChart();
 });

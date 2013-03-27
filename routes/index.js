@@ -15,6 +15,12 @@ exports.index = function(req, res) {
   })
 };
 
+exports.getDayGraphData = function(req, res) {
+  models.getDayGraphData(function(data) {
+    res.send(data);
+  });
+}
+
 exports.submitDigit = function(req, res) {
   var digit = req.body.index,
       value = req.body.value,

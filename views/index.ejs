@@ -50,9 +50,10 @@
           <p>
             We already collected <strong><%= digitAmount %></strong> digits by <strong><%= peopleAmount %></strong> different contributors!
           </p>
-          <p>
-            <small><strong>By the way:</strong>&nbsp; We already calculated one digit secretly when you opened this page.</small>
-          </p>
+          <p>Here's a small graph, because everybody loves graphs (it shows the added digits per day):</p>
+          <br />
+          <canvas id="dayChart" height="150" width="600"></canvas>
+          
         </div>
         <div class="span4">
           <h4>
@@ -70,6 +71,9 @@
             <p>This is not guaranteed to work...might crash your browser, might kill our DB...who knows?</p>
             <img src="images/yolo-mode.jpg" />
           </div>
+          <p>
+            <small><strong>By the way:</strong>&nbsp; We already calculated one digit secretly when you opened this page.</small>
+          </p>
         </div>
       </div>
     </div>
@@ -79,6 +83,7 @@
     <script src="javascripts/jquery.dropkick-1.0.0.js"></script>
     <script src="javascripts/custom_checkbox_and_radio.js"></script>
     <script src="javascripts/custom_radio.js"></script>
+    <script src="javascripts/Chart.min.js"></script>
     <script src="javascripts/underscore.min.js"></script>
     <script src="javascripts/parallel.min.js"></script>
     <script src="javascripts/application.js"></script>
