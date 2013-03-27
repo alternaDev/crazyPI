@@ -6,7 +6,11 @@ $("input[name=toggleOptions]").click(function() {
 
 var doneDigitBatches = 0;
 var doing = 0;
-var BATCH_SIZE = 25;
+
+var totalDigitAmount = 0;
+var doneDigitAmount = 0;
+
+var BATCH_SIZE = 50;
 
 $("#calc50").click(function() {
   if($("#calc50").attr("disabled")!="disabled")
@@ -32,7 +36,9 @@ function doDaStuff(digitAmount){
   var rest = digitAmount % BATCH_SIZE;
   digitAmount -= rest;
 
-  doneDigitBatches = 0; 
+  doneDigitBatches = 0;
+  doneDigitAmount = 0;
+  totalDigitAmount = digitAmount; 
   
   if(digitAmount > 0) {
     doing = digitAmount / BATCH_SIZE;
@@ -57,7 +63,7 @@ function doDigitBatches(batchSize) {
 }
 
 function updateUI() {
-  $("#bar").css("width", ((doneDigitBatches/doing)*100)+"%");
+  $("#bar").css("width", ((doneDigitAmount/totalDigitAmount)*100)+"%");
 
   if(doneDigitBatches >= doing) {
     $(".btn").removeAttr("disabled");
@@ -74,9 +80,10 @@ function doDigitBatch(amount, callback) {
   getDigitIndexes(amount, function(indexes) {
     var values = [];
 
-    doGenerateDigits(indexes, values, function(values){
+    doGenerateDigits(indexes, values, function(values) {
+      callback();
       submitDigits(values, function() {
-        callback();
+        
       }); 
     });
   });
@@ -98,6 +105,8 @@ function doGenerateDigits(indices, values, callback) {
   r.fetch(function(digit) {
     values.push({index: index, value: digit});
     r.terminate();
+    doneDigitAmount++;
+    updateUI();
     doGenerateDigits(indices, values, callback);
   });
 }
