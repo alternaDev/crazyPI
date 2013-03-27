@@ -137,8 +137,8 @@ function showChart() {
     var labels = [];
     var graphData = [];
     $.each(reponseData, function(index, value) {
-      index = new Date(index);
-      var dayName = index.getDay()+'. '+index.getMonth()+'.';
+      index = new Date(parseInt(index));
+      var dayName = index.getDate()+'.'+(index.getMonth()+1)+'.';
       labels.push(dayName);
       graphData.push(value);
     });

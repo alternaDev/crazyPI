@@ -57,13 +57,15 @@ exports.getDayGraphData = function(callback) {
   exports.Digit.findAll({where: ["updatedAt >= ?", date]}).success(function(digits) {
     var data = {};
     digits.forEach(function(digit) {
+      //if(digit.digitValue == null) return;
       var digitDate = digit.updatedAt;
       digitDate.setHours(0);
       digitDate.setMinutes(0);
       digitDate.setSeconds(0);
       digitDate.setMilliseconds(0);
-      if(typeof data[digitDate] == 'undefined') data[digitDate] = 0;
-      data[digitDate] = data[digitDate] + 1;
+      var digitTime = digitDate.getTime();
+      if(data[digitTime] == null) data[digitTime] = 0;
+      data[digitTime] = data[digitTime] + 1;
     });
     callback(data);
   });
