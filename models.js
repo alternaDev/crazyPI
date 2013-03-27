@@ -57,7 +57,7 @@ exports.getDayGraphData = function(callback) {
   exports.Digit.findAll({where: ["updatedAt >= ?", date]}).success(function(digits) {
     var data = {};
     digits.forEach(function(digit) {
-      //if(digit.digitValue == null) return;
+      if(digit.digitValue == null) return;
       var digitDate = digit.updatedAt;
       digitDate.setHours(0);
       digitDate.setMinutes(0);
