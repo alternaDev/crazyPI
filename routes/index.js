@@ -120,13 +120,19 @@ exports.getPi = function(req, res) {
 };
 
 function getNextDigitIndexes(amount, callback) {
-  models.Digit.findAll({where: {digitValue: null}, limit: amount}).success(function(digits) {
-    if(digits.length < amount) {
+  var getAmount = amount * 100;
+  models.Digit.findAll({where: {digitValue: null}, limit: getAmount}).success(function(digits) {
+    if(digits.length < getAmount) {
       generateMoreDigits();
       getNextDigitIndexes(amount, callback);
     } else {
       var resp = [];
-      for(var i = 0; i < amount; i++) resp.push(digits[i].digitIndex);
+      for(var i = 0; i < amount; i++) {
+        var index = random.rand(digits.length);
+        var digit = digits[index];
+        digits.splice(index, 1);
+        resp.push(digits[index].digitIndex);
+      }
       callback(resp);
     }
     
