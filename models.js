@@ -28,27 +28,20 @@ exports.Digit = sequelize.define("PiDigit", {
 
 exports.Digit.sync();
 
-exports.getUserAmount = function(callback) {
+exports.getUserAndDigitAmount = function(callback) {
   
   exports.Digit.all().success(function(digits) {
     var ips = [];
+    var digitAmount = 0;
     
     digits.forEach(function(digit) {
-      if(!(ips.indexOf(digit.userIP)>-1))
+      if(digit.digitValue != null && digit.digitValue.length > 0)
+        digitAmount++;
+      if(!(ips.indexOf(digit.userIP) > -1))
         if(digit.userIP != "")
           ips.push(digit.userIP);
     });
-    callback(ips.length - 1);
-  });
-}
-
-exports.getDigitAmount = function(callback) {
-  exports.Digit.all().success(function(digits) {
-    var count = 0;
-    digits.forEach(function(digit) {
-      if(digit.digitValue != null) count++;
-    });
-    callback(count);
+    callback({peopleAmount: ips.length - 1, digitAmount: digitAmount});
   });
 }
 

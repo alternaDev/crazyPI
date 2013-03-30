@@ -3,15 +3,9 @@ var models = require("../models.js"),
 
 var BATCH_SIZE = 5000;
 
-/*
- * GET home page.
- */
-
 exports.index = function(req, res) {
-  models.getUserAmount(function(userAmount) {
-    models.getDigitAmount(function(digitAmount) {
-      res.render('index', { title: 'crazy π', digitAmount: digitAmount, peopleAmount: userAmount });
-    });
+  models.getUserAndDigitAmount(function(data) {
+    res.render('index', {title: 'crazy π', digitAmount: data.digitAmount, peopleAmount: data.peopleAmount});
   });
 };
 
@@ -22,47 +16,10 @@ exports.getDayGraphData = function(req, res) {
 }
 
 exports.getStats = function(req, res) {
-  models.getUserAmount(function(userAmount) {
-    models.getDigitAmount(function(digitAmount) {
-      res.send({userAmount: userAmount, digitAmount: digitAmount});
-    });
-  })
-}
-
-exports.submitDigit = function(req, res) {
-  var digit = req.body.index,
-      value = req.body.value,
-      ip    = req.ip;
-  if(!(/^[0-9]+$/.test(digit))) {
-    res.send("invalid digit-id");
-    return;
-  }
-  if(!(/^[0-9a-fA-F]+$/.test(value))) {
-    res.send("invalid digit-value");
-    return;
-  }
-  
-  models.Digit.find({where: {
-    digitIndex: digit
-  }})
-  .success(function(digit) {
-    var hamWaSchon = digit.digitValue != null;
-    if(hamWaSchon) {
-      res.send("hamWaSchon");
-      return;
-    }
-    digit.digitValue = value;
-    digit.userIP = ip;
-    digit.save().success(function() {
-      res.send("okay");
-    }).error(function(error) {
-      res.send("fail: "+error);
-    });
-  })
-  .error(function(error) {
-    res.send("fail: " + error);
+  models.getUserAndDigitAmount(function(data) {
+    res.send({userAmount: data.userAmount, digitAmount: data.digitAmount});
   });
-};
+}
 
 exports.getDigitIndex = function(req, res) {
   var amount = req.query["amount"];
@@ -72,7 +29,6 @@ exports.getDigitIndex = function(req, res) {
     })
   } else
     res.send([-1]);
-  
 };
 
 exports.submitDigits = function(req, res) {
@@ -128,7 +84,7 @@ exports.getPi = function(req, res) {
 };
 
 function getNextDigitIndexes(amount, callback) {
-  var getAmount = amount * 100;
+  var getAmount = amount * 10;
   models.Digit.findAll({where: {digitValue: null}, limit: getAmount}).success(function(digits) {
     if(digits.length < getAmount) {
       generateMoreDigits();

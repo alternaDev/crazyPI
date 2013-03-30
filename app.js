@@ -30,11 +30,9 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/get-new-index', routes.getDigitIndex);
-app.get('/get-new-index/:randomshit', routes.getDigitIndex);
 app.get('/pi', routes.getPi);
 app.get('/get-day-graph-data', routes.getDayGraphData);
 app.get('/get-stats', routes.getStats);
-app.post('/submit-new-digit', routes.submitDigit);
 app.post('/submit-new-digits', routes.submitDigits);
 
 http.createServer(app).listen(app.get('port'), function(){
