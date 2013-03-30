@@ -54,7 +54,7 @@ exports.getDigitAmount = function(callback) {
 
 exports.getDayGraphData = function(callback) {
   var date = new Date(new Date().getTime() - 604800000);
-  exports.Digit.findAll({where: ["updatedAt >= ?", date]}).success(function(digits) {
+  exports.Digit.findAll({where: ["updatedAt >= ?", date], order: "updatedAt ASC"}).success(function(digits) {
     var data = {};
     digits.forEach(function(digit) {
       if(digit.digitValue == null) return;
