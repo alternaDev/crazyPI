@@ -12,13 +12,21 @@ exports.index = function(req, res) {
     models.getDigitAmount(function(digitAmount) {
       res.render('index', { title: 'crazy π', digitAmount: digitAmount, peopleAmount: userAmount });
     });
-  })
+  });
 };
 
 exports.getDayGraphData = function(req, res) {
   models.getDayGraphData(function(data) {
     res.send(data);
   });
+}
+
+exports.getStats = function(req, res) {
+  models.getUserAmount(function(userAmount) {
+    models.getDigitAmount(function(digitAmount) {
+      res.send({userAmount: userAmount, digitAmount: digitAmount});
+    });
+  })
 }
 
 exports.submitDigit = function(req, res) {
