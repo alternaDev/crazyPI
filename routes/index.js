@@ -17,7 +17,7 @@ exports.getDayGraphData = function(req, res) {
 
 exports.getStats = function(req, res) {
   models.getUserAndDigitAmount(function(data) {
-    res.send({userAmount: data.userAmount, digitAmount: data.digitAmount});
+    res.send({peopleAmount: data.peopleAmount, digitAmount: data.digitAmount});
   });
 }
 
